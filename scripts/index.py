@@ -90,6 +90,7 @@ def generate_notes(args):
 				"stroke_count": int(row["stroke_count"]),
 				"is_primitive": "y",
 			})
+			PRIMITIVES[next_frame].sort(key=lambda primitive: primitive.get('heisig_number'))
 
 	wanted_kanji = set(range(1, LAST_KANJI + 1))
 	if args.filter:

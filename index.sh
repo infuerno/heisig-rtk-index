@@ -16,38 +16,39 @@
 
 set -Eeuxo pipefail
 
-WORKDIR="$(mktemp --tmpdir -d "heisig-rtk-index.XXXXXX")"
+WORKDIR="$(mktemp -d -t "heisig-rtk-index")"
 
 FINALDIR="$WORKDIR/heisig-rtk-index"
 mkdir -p "$FINALDIR"
 
-# Remove any existing KANJIDIC2 copy.
+# Remove any existing KANJIDIC2 copy
 rm -f "kanjidic2.xml.gz"
 
-# Generate the index.
-./scripts/index_primitives.py \
+# Generate the index
+python ./scripts/index_primitives.py \
 	--input primitives/INPUT.csv \
 	--output "$WORKDIR/primitive_index" \
 	primitives/
 
-
-# Complete index.
-./scripts/index.py \
+# Complete index
+python ./scripts/index.py \
 	--kanji kanji/KANJI_INDEX.csv \
 	--primitives "$WORKDIR/primitive_index/PRIMITIVE_INDEX.csv" \
 	--output "$FINALDIR/INDEX_VOL1.csv"
-# Minimal index.
-./scripts/index.py \
+
+# Minimal index
+python ./scripts/index.py \
 	--filter MINIMAL_SET.txt \
 	--kanji kanji/KANJI_INDEX.csv \
 	--primitives "$WORKDIR/primitive_index/PRIMITIVE_INDEX.csv" \
-	--output "$FINALDIR/INDEX_MINMAL.csv"
+	--output "$FINALDIR/INDEX_MINIMAL.csv"
 
-# Move the media to $FINALDIR.
+# Move the media to $FINALDIR
 rm -f "$WORKDIR/primitive_index/PRIMITIVE_INDEX.csv"
+#mv "$WORKDIR/primitive_index/PRIMITIVE_INDEX.csv" "$FINALDIR/PRIMITIVE_INDEX.csv"
 mv "$WORKDIR/primitive_index" "$FINALDIR/media"
 
-# Make the zipfile.
+# Make the zipfile
 pushd "$WORKDIR"
 ARCHIVENAME="$(basename "$FINALDIR")"
 zip -9r "$ARCHIVENAME" "$ARCHIVENAME"

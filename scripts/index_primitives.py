@@ -267,10 +267,11 @@ def main(args):
 					parent_frame, child_frames[parent_frame].index(path) + 1,
 				)
 			else:
-				# Standalone primitives get a dediated P<index>.
+				# Standalone primitives get a dediated P<index>
 				group_idx = standalone_primitives[path]
 				group = standalone_groups[group_idx]
-				fake_heisig = "P-%.3d" % (group_idx + 1,)
+				fake_heisig = "%.4d.0" % next_frame
+				# fake_heisig = "P-%.3d" % (group_idx + 1,)
 				if len(group) > 1:
 					fake_heisig += ".%d" % (group.index(path) + 1,)
 				# TODO: Add real_heisig here somehow...
